@@ -1,5 +1,4 @@
 module.exports = (client) => {
-    // Solo agregar eventos de depuración que no existan en index.js
     client.distube
         .on('initQueue', (queue) => {
             console.log('[QUEUE] Nueva cola iniciada');

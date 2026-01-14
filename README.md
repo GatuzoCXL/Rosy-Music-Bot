@@ -1,17 +1,17 @@
-# 🎵 Rosy Music Bot
+# Rosy Music Bot
 
 Un bot de música para Discord potente y fácil de usar, construido con Discord.js y Distube.
 
-## ✨ Características
+## Características
 
-- 🎵 Reproducción de música desde YouTube y Spotify
-- 📋 Sistema de cola de reproducción
-- 🎚️ Control de volumen
-- ⏯️ Controles básicos (play, pause, resume, skip, stop)
-- 🔍 Búsqueda de canciones por nombre
-- 💻 Fácil de configurar y usar
+- Reproducción de música desde YouTube y Spotify
+- Sistema de cola de reproducción
+- Control de volumen
+- Controles básicos (play, pause, resume, skip, stop)
+- Búsqueda de canciones por nombre
+- Fácil de configurar y usar
 
-## 📋 Requisitos Previos
+## Requisitos Previos
 
 - [Node.js](https://nodejs.org/) (versión 18.17.0 o superior)
 - [npm](https://www.npmjs.com/) (normalmente viene con Node.js)
@@ -40,7 +40,7 @@ sudo apt install ffmpeg
 brew install ffmpeg
 ```
 
-## 🚀 Instalación
+## Instalación
 
 1. Clona este repositorio:
 ```bash
@@ -66,7 +66,7 @@ SPOTIFY_CLIENT_SECRET=tu_client_secret_de_spotify
 npm start
 ```
 
-## 📝 Configuración
+## Configuración
 
 ### Obtener las Claves Necesarias
 
@@ -86,7 +86,7 @@ npm start
    - Crea una nueva aplicación
    - Copia el Client ID y Client Secret
 
-## 🎮 Comandos
+## Comandos
 
 | Comando | Descripción |
 |---------|-------------|
@@ -99,12 +99,23 @@ npm start
 | `r!volume <1-100>` | Ajusta el volumen |
 | `r!help` | Muestra la lista de comandos |
 
-## 🔧 Solución de Problemas Comunes
+## Solución de Problemas
 
-### El bot no reproduce música
-- Asegúrate de tener todas las dependencias instaladas
-- Verifica que las claves API en el archivo `.env` sean correctas
-- Comprueba que el bot tenga los permisos necesarios en el servidor
+### El bot no reproduce música (Error NO_RESULT o de reproducción)
+
+**SOLUCIÓN CRÍTICA:**
+
+Después de instalar dependencias con `npm install`, debes editar el archivo de configuración de yt-dlp:
+
+**Ruta:** `node_modules/@distube/yt-dlp/dist/index.js`
+
+**Busca las líneas con `noCallHome: true` (aproximadamente en las líneas 147 y 177) y coméntalas:**
+
+```javascript
+//noCallHome: true,
+```
+
+Este parámetro causa errores de reproducción. Después de hacer este cambio, reinicia el bot con `npm start`.
 
 ### Errores de FFmpeg
 - Primero, intenta con la dependencia `ffmpeg-static` que viene incluida
@@ -120,29 +131,29 @@ npm start
 - Asegúrate de que el bot tenga los permisos necesarios
 - Comprueba que el token del bot sea correcto
 
-## 🚀 Próximas Mejoras
+## Próximas Mejoras
 
-¡El bot está en constante evolución! Estas son algunas de las características que se implementarán en futuras versiones:
+El bot está en constante evolución. Características planeadas para futuras versiones:
 
-- 🎮 Interfaz interactiva con botones y menús desplegables
-- 📊 Sistema de cola mejorado con paginación
-- 🎵 Soporte para más plataformas de música
-- 🎨 Diseño visual mejorado en embeds
-- ⚡ Optimización de rendimiento
-- 🔍 Búsqueda avanzada de canciones
-- 🎚️ Controles de audio mejorados
+- Interfaz interactiva con botones y menús desplegables
+- Sistema de cola mejorado con paginación
+- Soporte para más plataformas de música
+- Diseño visual mejorado en embeds
+- Optimización de rendimiento
+- Búsqueda avanzada de canciones
+- Controles de audio mejorados
 
-## 📜 Licencia
+## Licencia
 
 Este proyecto está bajo la Licencia ISC. Siéntete libre de usarlo y modificarlo.
 
-## 🤝 Contribuir
+## Contribuir
 
-Las contribuciones son bienvenidas! Si encuentras un bug o tienes una sugerencia, por favor abre un issue o un pull request.
+Las contribuciones son bienvenidas. Si encuentras un bug o tienes una sugerencia, por favor abre un issue o un pull request.
 
-## ⭐ Créditos
+## Créditos
 
-Desarrollado con ❤️ por GatuzoCXL
+Desarrollado por GatuzoCXL
 
 ---
 **Nota:** Asegúrate de no compartir tus tokens y claves API. Mantenlos seguros en el archivo `.env`.

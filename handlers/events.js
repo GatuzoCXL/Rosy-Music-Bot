@@ -1,15 +1,33 @@
 const fs = require('fs');
 const path = require('path');
+const Logger = require('../utils/logger');
 
 module.exports = (client) => {
-    const eventsPath = path.join(__dirname, '../events');
-    const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+    const clientEventsPath = path.join(__dirname, '../events/client');
+    if (fs.existsSync(clientEventsPath)) {
+        const clientEventFiles = fs.readdirSync(clientEventsPath).filter(file => file.endsWith('.js') && file !== 'messageCreate.js');
+        
+        for (const file of clientEventFiles) {
+            const filePath = path.join(clientEventsPath, file);
+            const event = require(filePath);
+            if (typeof event === 'function') {
+                event(client);
+                Logger.success(`Evento de cliente cargado: ${file}`, 'events.js');
+            }
+        }
+    }
 
-    for (const file of eventFiles) {
-        const filePath = path.join(eventsPath, file);
-        const event = require(filePath);
-        const eventName = file.split('.')[0];
-        client.on(eventName, (...args) => event(client, ...args));
-        console.log(`Evento cargado: ${eventName}`);
+    const distubeEventsPath = path.join(__dirname, '../events/distube');
+    if (fs.existsSync(distubeEventsPath)) {
+        const distubeEventFiles = fs.readdirSync(distubeEventsPath).filter(file => file.endsWith('.js'));
+        
+        for (const file of distubeEventFiles) {
+            const filePath = path.join(distubeEventsPath, file);
+            const event = require(filePath);
+            if (typeof event === 'function') {
+                event(client);
+                Logger.success(`Evento de DisTube cargado: ${file}`, 'events.js');
+            }
+        }
     }
 };
