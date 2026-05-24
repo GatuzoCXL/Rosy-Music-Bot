@@ -22,7 +22,7 @@ La primera vez, el launcher solicita el **TOKEN** de Discord, el **CLIENT_ID** y
 ### 1. Clonar y preparar
 
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/GatuzoCXL/Rosy-Music-Bot.git
 cd Rosy-Music-Bot
 npm install
 ```
