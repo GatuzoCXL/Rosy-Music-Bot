@@ -1,0 +1,40 @@
+server:
+  port: 8080
+  address: "0.0.0.0"
+
+lavalink:
+  plugins:
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.16.0"
+      repository: "https://maven.lavalink.dev/releases"
+  server:
+    password: "${LAVALINK_SERVER_PASSWORD:-rosy-local}"
+    sources:
+      youtube: false
+      bandcamp: false
+      soundcloud: false
+      twitch: false
+      vimeo: false
+      nico: false
+      http: true
+      local: false
+    bufferDurationMs: 128
+    playerUpdateInterval: 5
+
+logging:
+  level:
+    root: INFO
+    lavalink: INFO
+    plugin: INFO
+
+plugins:
+  youtube:
+    enabled: true
+    allowSearch: true
+    allowDirectVideoIds: true
+    allowDirectPlaylistIds: true
+    clients:
+      - MUSIC
+      - ANDROID_VR
+      - WEB
+      - WEBEMBEDDED
+    youtubePlaylistLoadLimit: 3

@@ -16,18 +16,4 @@ module.exports = (client) => {
             }
         }
     }
-
-    const distubeEventsPath = path.join(__dirname, '../events/distube');
-    if (fs.existsSync(distubeEventsPath)) {
-        const distubeEventFiles = fs.readdirSync(distubeEventsPath).filter(file => file.endsWith('.js'));
-        
-        for (const file of distubeEventFiles) {
-            const filePath = path.join(distubeEventsPath, file);
-            const event = require(filePath);
-            if (typeof event === 'function') {
-                event(client);
-                Logger.success(`Evento de DisTube cargado: ${file}`, 'events.js');
-            }
-        }
-    }
 };

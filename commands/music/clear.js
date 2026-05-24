@@ -1,9 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
-const Logger = require('../../utils/logger');
-const { stopPlayer } = require('../../utils/lavalinkQueue');
-const { createMessageCommandContext } = require('../../utils/commandContext');
 const { createSuccessEmbed, createErrorEmbed } = require('../../utils/embeds');
-const { clearProgressClock } = require('../../utils/progressUpdater');
+const Logger = require('../../utils/logger');
+const { getQueue, clearQueue } = require('../../utils/lavalinkQueue');
+const { createMessageCommandContext } = require('../../utils/commandContext');
 
 function isLavalinkAvailable(client) {
     return Boolean(
@@ -14,11 +13,11 @@ function isLavalinkAvailable(client) {
 }
 
 module.exports = {
-    name: 'stop',
-    description: 'Detiene la música y limpia la cola',
+    name: 'clear',
+    description: 'Limpia la cola de reproducción',
     data: new SlashCommandBuilder()
-        .setName('stop')
-        .setDescription('Detiene la música y limpia la cola')
+        .setName('clear')
+        .setDescription('Limpia la cola de reproducción')
         .setDMPermission(false),
     async execute(message, args, client) {
         const ctx = createMessageCommandContext(message, args);
@@ -31,18 +30,18 @@ module.exports = {
             return ctx.reply('❌ Lavalink no está disponible.');
         }
 
-        if (!client.lavalinkManager.getPlayer(guildId)) {
+        const llQueue = await getQueue(client.lavalinkManager, guildId);
+        if (!llQueue) {
             return ctx.reply('❌ No hay nada reproduciéndose');
         }
 
         try {
-            await stopPlayer(client.lavalinkManager, guildId);
-            clearProgressClock(guildId);
-            Logger.music(`⏹️ Detenido por ${ctx.user.tag}`, 'stop.js');
-            return ctx.reply({ embeds: [createSuccessEmbed('⏹️ Música detenida')] });
+            clearQueue(client.lavalinkManager, guildId);
+            Logger.music(`🗑️ Cola limpiada por ${ctx.user.tag}`, 'clear.js');
+            return ctx.reply({ embeds: [createSuccessEmbed('🗑️ Cola limpiada', 'La canción actual sigue sonando')] });
         } catch (error) {
-            Logger.error('Error en stop (Lavalink)', error, 'stop.js');
-            return ctx.reply({ embeds: [createErrorEmbed('Error al detener', 'No se pudo detener la música.')] });
+            Logger.error('Error en clear', error, 'clear.js');
+            return ctx.reply({ embeds: [createErrorEmbed('Error al limpiar', 'No se pudo limpiar la cola.')] });
         }
     }
 };

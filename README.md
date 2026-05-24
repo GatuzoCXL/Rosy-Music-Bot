@@ -1,159 +1,213 @@
 # Rosy Music Bot
 
-Un bot de música para Discord potente y fácil de usar, construido con Discord.js y Distube.
+Bot de música para Discord, construido con Discord.js y Lavalink. Reproduce canciones desde YouTube y YouTube Music con cola, controles de volumen y comandos de barra.
 
-## Características
+## Inicio rápido
 
-- Reproducción de música desde YouTube y Spotify
-- Sistema de cola de reproducción
-- Control de volumen
-- Controles básicos (play, pause, resume, skip, stop)
-- Búsqueda de canciones por nombre
-- Fácil de configurar y usar
-
-## Requisitos Previos
-
-- [Node.js](https://nodejs.org/) (versión 18.17.0 o superior)
-- [npm](https://www.npmjs.com/) (normalmente viene con Node.js)
-- Una [aplicación de Discord](https://discord.com/developers/applications) y su token de bot
-- [FFmpeg](https://ffmpeg.org/) (incluido en las dependencias, pero si hay problemas puedes instalarlo manualmente)
-
-### Instalación Manual de FFmpeg (Opcional)
-
-Si tienes problemas con FFmpeg, puedes instalarlo manualmente:
-
-#### Windows (usando Chocolatey)
-1. Instala [Chocolatey](https://chocolatey.org/install) si no lo tienes
-2. Abre PowerShell como administrador y ejecuta:
-```powershell
-choco install ffmpeg
-```
-
-#### Linux
 ```bash
-sudo apt update
-sudo apt install ffmpeg
+npm install
+npm start
 ```
 
-#### macOS
-```bash
-brew install ffmpeg
-```
+La primera vez, el launcher solicita el **TOKEN** de Discord, el **CLIENT_ID** y la contraseña de Lavalink (por defecto `rosy-local`). En ejecuciones siguientes usa los valores guardados en `.env`.
+
+## Requisitos
+
+- [Node.js](https://nodejs.org/) 18.17.0 o superior
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Una aplicación en [Discord Developer Portal](https://discord.com/developers/applications)
 
 ## Instalación
 
-1. Clona este repositorio:
-```bash
-git clone [URL-del-repositorio]
-cd RosyMusicBot_estable
-```
+### 1. Clonar y preparar
 
-2. Instala las dependencias:
 ```bash
+git clone <url-del-repositorio>
+cd Rosy-Music-Bot
 npm install
 ```
 
-3. Crea un archivo `.env` en la raíz del proyecto con la siguiente información:
-```env
-TOKEN=tu_token_de_discord_aquí
-YOUTUBE_API_KEY=tu_clave_api_de_youtube
-SPOTIFY_CLIENT_ID=tu_client_id_de_spotify
-SPOTIFY_CLIENT_SECRET=tu_client_secret_de_spotify
-```
+### 2. Primera ejecución
 
-4. Inicia el bot:
 ```bash
 npm start
 ```
 
-## Configuración
+El launcher hace en secuencia:
 
-### Obtener las Claves Necesarias
+1. **TOKEN** — si no está en `.env`, pide el token y lo guarda.
+2. **CLIENT_ID** — necesario para registrar comandos de barra. Lo encuentras en Discord Developer Portal > tu app > General Information.
+3. **LAVALINK_PASSWORD** — presiona Enter para usar `rosy-local` o ingresa una contraseña propia.
+4. **Docker** — verifica que Docker Desktop esté corriendo e inicia Lavalink.
+5. **Perfil** — sincroniza automáticamente el perfil público del bot con Discord (description, tags, install_params).
+6. **Bot** — inicia el bot de Discord.
 
-1. **Token de Discord:**
-   - Ve a [Discord Developer Portal](https://discord.com/developers/applications)
-   - Crea una nueva aplicación o selecciona una existente
-   - Ve a la sección "Bot" y copia el token
+### 3. Registrar comandos de barra
 
-2. **YouTube API Key:**
-   - Ve a [Google Cloud Console](https://console.cloud.google.com/)
-   - Crea un nuevo proyecto o selecciona uno existente
-   - Habilita la API de YouTube Data API v3
-   - Crea una credencial y copia la API Key
+Los comandos slash (`/play`, `/queue`, etc.) no se despliegan automáticamente. Cada vez que agregues o modifiques un comando, ejecuta:
 
-3. **Spotify API:**
-   - Ve a [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
-   - Crea una nueva aplicación
-   - Copia el Client ID y Client Secret
+```bash
+npm run deploy:commands
+```
+
+> **Nota:** `npm start` solo sincroniza el perfil público del bot; no despliega comandos de barra.
+
+## Docker en distintos sistemas
+
+El bot usa `docker compose` para ejecutar Lavalink. Funciona igual en Windows, Linux y macOS.
+
+| Sistema | Requisito |
+|---------|-----------|
+| Windows | Docker Desktop abierto antes de `npm start` |
+| Linux | Docker Desktop o servicio Docker activo (`sudo systemctl start docker`) |
+| macOS | Docker Desktop abierto |
+
+Si Docker no está disponible, el launcher ofrece un **modo manual** que inicia el bot sin Lavalink. La reproducción de música no funcionará en ese modo.
+
+## Configuración manual con `.env`
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```env
+TOKEN=tu_token_de_discord
+CLIENT_ID=tu_application_id
+LAVALINK_HOST=localhost
+LAVALINK_PORT=23333
+LAVALINK_PASSWORD=rosy-local
+```
+
+Si el archivo `.env` existe con todos los valores, el wizard interactivo no aparece.
+
+## Perfil público del bot (`perfil.js`)
+
+El archivo `perfil.js` controla la información visible en la ficha de tu aplicación en Discord:
+
+- **description** — texto bajo el nombre del bot
+- **tags** — hasta 5 etiquetas cortas (ej. music, entertainment)
+- **install_params** — scopes y permisos del botón "Añadir a la App"
+- **presence_messages** — mensajes rotativos del status
+
+El perfil se sincroniza **automáticamente cada vez que ejecutas `npm start`**.
+
+Para actualizar solo el perfil sin iniciar el bot:
+
+```bash
+npm run profile:update
+```
+
+> Los emojis de servidor personalizados (tipo `<a:nombre:id>`) pueden no ser confiables en la descripción de la aplicación. Usa emojis Unicode si necesitas iconografía en la descripción.
 
 ## Comandos
 
 | Comando | Descripción |
 |---------|-------------|
-| `r!play <canción>` | Reproduce una canción (URL o nombre) |
-| `r!pause` | Pausa la reproducción actual |
-| `r!resume` | Reanuda la reproducción |
-| `r!skip` | Salta a la siguiente canción |
-| `r!stop` | Detiene la reproducción y limpia la cola |
-| `r!queue` | Muestra la cola de reproducción |
-| `r!volume <1-100>` | Ajusta el volumen |
-| `r!help` | Muestra la lista de comandos |
+| `/play <canción>` | Reproduce una canción (URL o nombre) |
+| `/pause` | Pausa la reproducción |
+| `/resume` | Reanuda la reproducción |
+| `/skip` | Salta a la siguiente canción |
+| `/stop` | Detiene la reproducción y limpia la cola |
+| `/queue` | Muestra la cola de reproducción |
+| `/volume <1-100>` | Ajusta el volumen |
+| `/lyrics [canción]` | Muestra la letra de la canción actual o de una búsqueda |
 
-## Solución de Problemas
+## Solución de problemas
 
-### El bot no reproduce música (Error NO_RESULT o de reproducción)
+### `npm start` termina con error de TOKEN
 
-**SOLUCIÓN CRÍTICA:**
+```bash
+# Windows (PowerShell)
+$env:TOKEN="tu_token"; npm start
 
-Después de instalar dependencias con `npm install`, debes editar el archivo de configuración de yt-dlp:
-
-**Ruta:** `node_modules/@distube/yt-dlp/dist/index.js`
-
-**Busca las líneas con `noCallHome: true` (aproximadamente en las líneas 147 y 177) y coméntalas:**
-
-```javascript
-//noCallHome: true,
+# Linux/macOS
+TOKEN=tu_token npm start
 ```
 
-Este parámetro causa errores de reproducción. Después de hacer este cambio, reinicia el bot con `npm start`.
+O edita directamente tu archivo `.env` y agrega la línea:
 
-### Errores de FFmpeg
-- Primero, intenta con la dependencia `ffmpeg-static` que viene incluida
-- Si hay problemas, instala FFmpeg manualmente usando Chocolatey (Windows), apt (Linux) o brew (macOS)
-- Para verificar si FFmpeg está instalado correctamente, abre una terminal y ejecuta:
-  ```bash
-  ffmpeg -version
-  ```
-- Si el comando no es reconocido en Windows después de instalar con Chocolatey, reinicia tu terminal o computadora
+```
+TOKEN=tu_token_de_discord
+```
 
-### El bot no responde a los comandos
-- Verifica que el prefijo sea `r!`
-- Asegúrate de que el bot tenga los permisos necesarios
-- Comprueba que el token del bot sea correcto
+---
 
-## Próximas Mejoras
+### El bot no reproduce música
 
-El bot está en constante evolución. Características planeadas para futuras versiones:
+1. Verifica que Lavalink esté corriendo:
 
-- Interfaz interactiva con botones y menús desplegables
-- Sistema de cola mejorado con paginación
-- Soporte para más plataformas de música
-- Diseño visual mejorado en embeds
-- Optimización de rendimiento
-- Búsqueda avanzada de canciones
-- Controles de audio mejorados
+```bash
+docker ps
+```
 
-## Licencia
+2. Revisa los logs de Lavalink:
 
-Este proyecto está bajo la Licencia ISC. Siéntete libre de usarlo y modificarlo.
+```bash
+docker compose logs lavalink
+```
 
-## Contribuir
+3. Verifica que el token en `.env` sea correcto.
 
-Las contribuciones son bienvenidas. Si encuentras un bug o tienes una sugerencia, por favor abre un issue o un pull request.
+---
+
+### Comandos duplicados en Discord
+
+Si ves un comando (ej. `/pause`) repetido con descripciones diferentes, tienes comandos tanto **globales** como **guild-scoped** con el mismo nombre.
+
+**Limpiar comandos del guild:**
+
+```bash
+# Opción 1: script dedicado
+node scripts/clear-guild-commands.js --guild=TU_GUILD_ID
+
+# Opción 2: dentro de deploy-commands
+node scripts/deploy-commands.js --clear-guild --guild=TU_GUILD_ID
+```
+
+Esto elimina los comandos del guild sin tocar los globales. Discord puede tardar hasta 1 hora en propagar el cambio.
+
+---
+
+### Docker no responde
+
+```bash
+# Verificar estado de Docker
+docker ps
+
+# Abrir Docker Desktop manualmente
+# En Linux:
+sudo systemctl start docker
+
+# Reiniciar el launcher
+npm start
+```
+
+---
+
+### Puerto 23333 ya está en uso
+
+Configura otro puerto en `.env`:
+
+```
+LAVALINK_PORT=23334
+```
+
+Luego reinicia con `npm start`.
+
+---
+
+### Modo manual: Lavalink no disponible
+
+Si elegiste modo manual o Docker no estaba disponible, el bot inicia sin Lavalink y los comandos de música no funcionarán. Abre Docker Desktop y vuelve a ejecutar `npm start`.
+
+## Rollback
+
+Si el bot deja de funcionar después de una actualización:
+
+```bash
+git checkout HEAD~1
+npm install
+npm start
+```
 
 ## Créditos
 
 Desarrollado por GatuzoCXL
-
----
-**Nota:** Asegúrate de no compartir tus tokens y claves API. Mantenlos seguros en el archivo `.env`.

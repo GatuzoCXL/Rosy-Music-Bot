@@ -1,0 +1,25 @@
+services:
+  lavalink:
+    image: ghcr.io/lavalink-devs/lavalink:4
+    container_name: rosy-lavalink
+    restart: unless-stopped
+    ports:
+      - "${LAVALINK_PORT:-23333}:8080"
+    environment:
+      _JAVA_OPTIONS: -Xmx128m -Xms128m
+      SERVER_PORT: 8080
+      LAVALINK_SERVER_PASSWORD: ${LAVALINK_PASSWORD:-rosy-local}
+    volumes:
+      - ./lavalink/application.yml:/opt/Lavalink/application.yml:ro
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 3 bash -c 'cat < /dev/null > /dev/tcp/localhost/8080' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    networks:
+      - rosy-network
+
+networks:
+  rosy-network:
+    driver: bridge
