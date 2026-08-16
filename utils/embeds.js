@@ -372,11 +372,16 @@ function createWarningEmbed(title, description) {
 }
 
 function createSuccessEmbed(title, description) {
-	return new EmbedBuilder()
+	const embed = new EmbedBuilder()
 		.setColor(COLORS.SUCCESS)
 		.setTitle(title)
-		.setDescription(description)
 		.setTimestamp();
+
+	if (description !== undefined && description !== null) {
+		embed.setDescription(stringifyEmbedDescription(description));
+	}
+
+	return embed;
 }
 
 function createNoMusicEmbed(description) {
