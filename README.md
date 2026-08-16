@@ -495,6 +495,15 @@ docker compose logs lavalink
 npm start
 ```
 
+5. After changing `lavalink/application.yml`, recreate Lavalink so it downloads and loads the pinned YouTube plugin version:
+
+```bash
+docker compose up -d --force-recreate lavalink
+docker compose logs -f lavalink
+```
+
+Confirm the startup log reports `youtube-plugin-1.18.2` before retesting playback. The configured YouTube client fallback order is `MUSIC`, `ANDROID_VR`, `WEB`, then `WEBEMBEDDED`, matching the plugin's documented query order.
+
 ---
 
 ### Duplicate commands appear in Discord
