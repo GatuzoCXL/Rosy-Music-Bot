@@ -9,6 +9,8 @@ services:
       _JAVA_OPTIONS: -Xmx128m -Xms128m
       SERVER_PORT: 8080
       LAVALINK_SERVER_PASSWORD: ${LAVALINK_PASSWORD:-rosy-local}
+      SPOTIFY_CLIENT_ID:
+      SPOTIFY_CLIENT_SECRET:
     volumes:
       - ./lavalink/application.yml:/opt/Lavalink/application.yml:ro
     healthcheck:

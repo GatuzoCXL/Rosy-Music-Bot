@@ -92,6 +92,11 @@ function clearProgressClock(guildId) {
 	progressClocks.delete(guildId);
 }
 
+function clearProgressState(guildId) {
+	stopProgressUpdater(guildId);
+	clearProgressClock(guildId);
+}
+
 // Single source of truth for player panel payload — ensures embed + buttons never diverge.
 function buildPlayerPanelPayload(manager, guildId, overrideTrack = null) {
 	const player = manager?.getPlayer(guildId);
@@ -226,5 +231,6 @@ module.exports = {
 	resumeProgressClock,
 	resetProgressClock,
 	clearProgressClock,
+	clearProgressState,
 	getCalculatedPosition,
 };

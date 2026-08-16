@@ -372,6 +372,8 @@ async function stopPlayer(manager, guildId) {
 	}
 
 	historyClear(guildId);
+	const { clearProgressState } = require("./progressUpdater");
+	clearProgressState(guildId);
 }
 
 async function setVolume(manager, guildId, percent) {

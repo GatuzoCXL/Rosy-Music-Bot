@@ -1,7 +1,7 @@
 // Handles Lavalink queue completion and clears active panel, history, and progress state.
 const Logger = require("../../utils/logger");
 const { removeActivePlayerMessage } = require("../../utils/playerMessage");
-const { stopProgressUpdater } = require("../../utils/progressUpdater");
+const { clearProgressState } = require("../../utils/progressUpdater");
 const { createWarningEmbed } = require("../../utils/embeds");
 const { clearHistory } = require("../../utils/playbackHistory");
 
@@ -12,7 +12,7 @@ module.exports = function queueEndHandler(manager) {
 			"lavalink/queueEnd.js",
 		);
 
-		stopProgressUpdater(player.guildId);
+		clearProgressState(player.guildId);
 		removeActivePlayerMessage(player.guildId);
 		clearHistory(player.guildId);
 

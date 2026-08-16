@@ -348,6 +348,14 @@ En modo manual, el bot puede iniciar, pero la reproducción de música no funcio
 
 ---
 
+### Spotify links
+
+Lavalink installs the pinned LavaSrc `4.8.3` plugin alongside the enabled YouTube plugin. It resolves `open.spotify.com` track, album, playlist, and artist URLs, then mirrors each track through YouTube or YouTube Music using its ISRC and query fallbacks.
+
+Spotify credentials are optional. Set both `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` in `.env` to use the Spotify client-credentials flow. When either value is absent, LavaSrc falls back to its anonymous token, so Docker Compose remains valid and Spotify URL playback continues without credentials. `spsearch` requires both credentials, and Spotify availability or matching failures can still prevent an individual track from playing.
+
+---
+
 ## Environment Variables
 
 You can manually create a `.env` file in the project root:
@@ -373,6 +381,9 @@ CLIENT_ID=tu_application_id
 LAVALINK_HOST=localhost
 LAVALINK_PORT=23333
 LAVALINK_PASSWORD=rosy-local
+# Optional: enable Spotify client-credentials flow.
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
 ```
 
 Si el archivo `.env` ya existe y contiene todos los valores requeridos, el asistente interactivo no aparecerá.

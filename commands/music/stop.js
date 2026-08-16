@@ -3,7 +3,6 @@ const Logger = require('../../utils/logger');
 const { stopPlayer } = require('../../utils/lavalinkQueue');
 const { createMessageCommandContext } = require('../../utils/commandContext');
 const { createSuccessEmbed, createErrorEmbed } = require('../../utils/embeds');
-const { clearProgressClock } = require('../../utils/progressUpdater');
 
 function isLavalinkAvailable(client) {
     return Boolean(
@@ -37,9 +36,8 @@ module.exports = {
 
         try {
             await stopPlayer(client.lavalinkManager, guildId);
-            clearProgressClock(guildId);
             Logger.music(`⏹️ Detenido por ${ctx.user.tag}`, 'stop.js');
-            return ctx.reply({ embeds: [createSuccessEmbed('⏹️ Música detenida')] });
+            return ctx.reply({ embeds: [createSuccessEmbed('⏹️ Música detenida', 'La reproducción y la cola se detuvieron.')] });
         } catch (error) {
             Logger.error('Error en stop (Lavalink)', error, 'stop.js');
             return ctx.reply({ embeds: [createErrorEmbed('Error al detener', 'No se pudo detener la música.')] });
