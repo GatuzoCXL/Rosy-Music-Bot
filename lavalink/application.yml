@@ -29,16 +29,6 @@ logging:
     plugin: INFO
 
 plugins:
-  lavasrc:
-    providers:
-      - "ytsearch:\"%ISRC%\""
-      - "ytsearch:%QUERY%"
-    sources:
-      spotify: true
-    spotify:
-      clientId: "${SPOTIFY_CLIENT_ID}"
-      clientSecret: "${SPOTIFY_CLIENT_SECRET}"
-      countryCode: "ES"
   youtube:
     enabled: true
     allowSearch: true
